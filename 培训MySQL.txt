@@ -1,0 +1,65 @@
+1.安装MySQL，yum install mysql
+	安装redis：https://www.cnblogs.com/dadian/p/11930133.html
+	安装sysbench：https://www.cnblogs.com/zhangmingcheng/p/13163883.html
+	sysbench:跨平台的基准测试工具，支持多线程，支持多种数据库.主要包括以下几种测试:
+		cpu性能
+		磁盘io性能
+		调度程序性能
+		内存分配及传输速度
+		POSIX线程性能
+		数据库性能(OLTP基准测试)
+基准测试与压力测试
+	基准测试可以理解为针对系统的一种压力测试。但基准测试不关心业务逻辑，更加简单、直接、易于测试，数据可以由工具生成，不要求真实；而压力测试一般考虑业务逻辑(如购物车业务)，要求真实的数据。
+	出现错误：https://blog.csdn.net/shun35/article/details/94576800
+如果远程连接/vnc一直掉，输入： unset TMOUT
+2.mysql -h IP地址 -P 端口号 -u 用户名 -p
+3.sysbench --db-driver=mysql --mysql-host=10.195.159.201(IP地址) --mysql-port=端口号 --mysql-user=用户名 --mysql-password=密码 --mysql-db=数据库名 --table-size=2000000 --tables=24 --threads=32 --db-ps-mode=disable oltp_read_write --report-interval=1 prepare
+
+安装redis：
+redis-cli命令行客户端安装（Linux）
+登录移动云云主机（Linux）。
+
+https://www.cnblogs.com/dadian/p/11930133.html
+
+执行如下命令（请确保已经安装了wget），获取Redis安装包
+yum -y install wget
+
+wget http://download.redis.io/releases/redis-4.0.14.tar.gz
+
+解压安装包。
+
+tar -xvf redis-4.0.14.tar.gz
+
+安装gcc编译环境。（如已安装，请确保gcc版本在9.0以上）
+
+yum -y install gcc gcc-c++
+
+cd redis-4.0.14
+
+make
+
+make install
+如果安装成功：直接进行连接方法。
+
+
+说明：
+
+若安装时make install报错：zmalloc.h:50:31: error: jemalloc/jemalloc.h，则将make命令修改为：
+
+make MALLOC=libc
+
+make install
+
+连接方法
+在云主机Linux命令行，执行如下命令连接Redis实例。（注：如下命令，同时适用于标准版-单副本、标准版-双副本、集群版-双副本）
+A）redis-cli -h <host> -p <port> -a <password>
+
+或
+
+B）redis-cli -h <host> -p <port>
+
+-h：Redis实例的内网连接地址，查看实例详情可获取内网连接地址。若为IPv4连接，内网地址输入IPv4的内网地址。若为IPv6连接，内网地址输入IPv6的内网地址。
+
+-p：Redis实例的内网服务端口。查看实例详情可获取内网服务端口。
+
+-a：Redis实例的连接密码（订购Redis实例时所设置的密码）。为了提高安全性，建议您使用B）连接命令（即不直接在命令行中输入密码，在执行连接命令后再输入auth <password>密码验证），参考如下图所示.

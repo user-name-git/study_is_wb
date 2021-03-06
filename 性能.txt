@@ -1,0 +1,141 @@
+nohup：不挂断的运行命令。要运行后台中的nohup ，添加 & 到命令尾部
+iperf3： 测试带宽的大小
+ip a |grep eth0 ：查看网卡的mtu(最大传输单元)
+ethtool -l eth0 ：
+fio： I/O 工具用来对硬件进行压力测试
+yum不通的解决方法：配置yum源：
+1、配置yum源地址，编辑/etc/hosts文件，增加10.142.18.8 mirrors.bclinux.org
+2、编辑/etc/resolv.conf文件，增加nameserver 8.8.8.8
+curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
+
+云主机性能：
+yum install -y git   #下载git工具
+yum install -y numactl* #工具非一致性内存访问
+yum install -y xdg-utils-1.1.0-0.17.20120809git.el7.noarch
+
+git clone https://gitee.com/zhoumingang/ptstool.git   #下载ptstool工具
+cd ptstool #进入
+sh deploy.sh #运行文件，安装依赖包
+sh cepinginstall.sh #执行命令，安装测试工具
+nohup sh ceping.sh > pts-result 2>&1 & #运行命令
+sh ceping.sh #执行开始	
+到/var/cepingresult/路径下 取xxx(主机名)-sysbench_cpu.txt结果
+	-sysbench_cpu.txt：cpu整形运算
+	-openssl_cpu ：cpu加密运算。安全套接字密码库 。被广泛应用于网银、电子邮件等广泛使用。
+	-c-ray_cpu.txt: 浮点运算
+	-stream_memory.txt：内存带宽的性能
+	-rt-test_cpu.txt：系统的实时性性能
+	-pgbench_system.txt：数据库基准性能
+测试云服务器java应用性能：
+	安装java：yum install -y java
+	下载ptstool工具：git clone https://gitee.com/zhoumingang/ptstool.git   
+	进入：cd ptstool
+	安装依赖包：sh deploy.sh 
+	安装测试工具：sh cepinginstall.sh
+	执行开始命令，等待测试结果：java -jar jmh/target/benchmarks.jar -t max		
+
+
+单独跑一个：cat cepinginstall.sh
+	install 改成run
+MySQL性能：
+	oltp是针对数据库的基准测试，例如每次对数据库进行优化后执行基准测试来测试不同的配置的tps。
+		数据库的基准测试是对数据库的性能指标进行定量的、可复现的、可对比的测试
+	sysbench 0.5之后通过一系列LUA脚本来替换之前的oltp，来模拟更接近真实的基准测试环境。这些测试脚本包含：
+		insert.lua、oltp.lua、parallel_prepare.lua、select_random_points.lua、
+		update_index.lua、delete.lua oltp_simple.lua、select.lua、select_random_ranges.lua、				update_non_index.lua
+	
+
+	提前向数据库中写入12G当作基础数据。
+	在.sh文件中写入脚本
+		for a in 10 20 40 60 80 100 120 140 160 180 200 220 240 260 280 300
+		do
+		sysbench /usr/local/share/sysbench/tests/include/oltp_legacy/oltp.lua --mysql-host=（数				据库ip） --mysql-db=（库名） --mysql-port=（数据库端口号） --mysql-user=（用户名） 					--mysql-password='*******'（数据库密码） --oltp-test-mode=complex --oltp-tables-					count=24--oltp-table-size=2000000 --threads=$a --time=600 --report-interval=60 run;
+		done
+	下载sysbench：wget https://github.com/akopytov/sysbench/archive/1.0.zip -O "sysbench-1.0.zip"
+	解压：unzip sysbench-1.0.zip
+	进入：cd sysbench
+	安装依赖：yum install automake libtool –y   （如果出现 no match 则去掉 -y）
+	安装：./autogen.sh
+	然后：./configure
+	 #如果出现：configure: error: mysql_config executable not found  则 安装 ：yum install mariadb-devel
+	export LD_LIBRARY_PATH=/usr/local/mysql/include #这里要换成自己虚拟机中mysql路径下的include，可以用：which mysql命令查看mysql位置。
+	然后：make	#如果 stop （安装gcc  。 yum install gcc gcc-c++ autoconf automake）
+	make install
+	sysbench --version
+		如果不成功（wget http://ftp.gnu.org/pub/gnu/ncurses/ncurses-5.6.tar.gz
+				tar zxvf ncurses-5.6.tar.gz
+				 ./configure -prefix=/usr/local -with-shared -without-debug		
+				make
+				make install ）
+	然后查看：
+		服务器每秒处理个事务个数（TPS）：451.9782（规定）也即是我们常说的吞吐量
+		在规定时间内所处理的流量（QPS）：9475.564（规定）
+对象存储性能：
+	安装jdk：yum install  java nmap-ncat
+	安装wget：yum install wget
+	安装解压工具：yum install unzip zip
+	通过wget下载,或者直接通过浏览器输入下面的链接下载：
+		wget https://github.com/intel-cloud/cosbench/releases/download/v0.4.2.c4/0.4.2.c4.zip
+	解压：unzip 0.4.2.c4.zip
+	进入：cd 0.4.2.c4
+	添加执行权限：chmod +x *.sh
+	删除http_proxy环境变量：unset http_proxy
+	启动cosbench： sh start-all.sh 
+	查看java进程： ps -ef |grep java
+	访问web端cosbench：http://${IP}:19088/controller/
+	进入conf配置：cd conf/
+	执行启动：sh ../cli.sh submit 设置的配置文件
+
+文件存储性能：
+	iops:每秒的读写次数
+
+	linux挂在nfs：创建虚拟网卡-绑定云主机，在文件存储里面创建规则（加入网卡的ip地址）
+	Linux系统如需要使用文件存储服务需要在系统内先安装rpc服务和nfs服务
+	在linux云主机中安装rpc服务：yum install rpcbind -y
+	安装nfs服务： yum install nfs-utils -y
+	挂在文件存储：mount -t nfs 共享目录 /mnt    
+	随机读写性能：
+	查看java是否安装rpm -qa |grep java
+	安装：java：yum install -y java-1.7.0*
+	wget https://ecloud.10086.cn/op-help-center/develop/202012021606895057363069234.rar
+	下载解压rar包工具：wget http://www.rarlab.com/rar/rarlinux-3.8.0.tar.gz
+	解压下载的rar工具包：tar zxvf rarlinux-3.8.0.tar.gz
+	安装：cd rar       ---- make ------- make install
+	解压rar包：rar x etc.rar 
+	解压后：cd vdbench
+	./vdbench -t 测试vdbench的可用性
+	执行失败：-bash: ./vdbench: Permission denied
+	需要添加执行权限：chmod 777 vdbench	
+		脚本编写：是64k_test，1M_test，200M_test。	
+		1、anchor=/dir 改为具体的测试目录或者说是挂载点
+		2、调整depth, width, files的大小
+		启动测试：nohup ./vdbench -f 脚本 -o 指定存放目录 &
+		查看运行 结果：实时查看运行状态指令为：tail -f nohup.output / 最终保存结果也可在指定存放目录里查看	
+	iops性能：fio-wenjiancunchu-1.tar
+	解压：unzip fio /	tar -zxvf fio
+	进入：cd fio-wenjian
+	修改配置：vi cfg.py  修改/root 为 挂载目录
+	运行 test.py
+	
+单卷性能：磁盘性能	
+	预期结果：测得是IOPS：随机读写次数，随机读写带宽
+		要求是：吞吐量=min{120+0.5*容量，350}MBps
+		100G硬盘的吞吐量>170mb,测试通过
+		1000G吞吐量＞350MBps，测试通过
+	前置条件：下载fio文件或者上传这个文件
+		挂载一个硬盘
+	删除分区：进入fio文件
+		rpm -ivh  bc-1.06.95-15.fc23.x86_64.rpm
+	赋予权限：chmod 777 fio-2.1.7
+	（可不用这一步），分区：执行命令sudo fdisk /dev/sdb后再输入n删除该分区，一直敲回车，直到出现Cmooand（m for help）:再输入w，保存设置，
+	格式化云硬盘为XFS格式：输入命令sudo mkfs.xfs -f /dev/sdb1
+	创建挂载目录：mkdir /mnt/dome
+	挂载：mount -t xfs  /dev/sdb /mnt/dome
+	编辑cfg.py文件，更改挂载名称问挂载目录（/mnt/dome）
+	执行开始命令：nohup python test.py & 
+	查看结果：result.csv
+
+	
+	
+	
+

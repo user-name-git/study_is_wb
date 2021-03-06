@@ -1,0 +1,31 @@
+prometheus的使用：
+https://blog.csdn.net/qq_36357820/article/details/80777167
+	
+https://blog.csdn.net/illidanjiang/article/details/89642331
+
+https://blog.csdn.net/weixin_43870986/article/details/105218204
+
+https://blog.csdn.net/hfut_wowo/article/details/78536022?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-2&spm=1001.2101.3001.4242
+
+sqlmap的使用：
+	https://blog.csdn.net/syy0201/article/details/102802748
+sql注入靶场：
+	http://59.63.200.79:8003/?id=1
+loadrunner破解：
+	https://blog.csdn.net/jeromezmzx007/article/details/90718810
+
+Hyenae的使用：
+	https://www.csdn.net/gather_23/MtjacgxsOTEwNDktYmxvZwO0O0OO0O0O.html
+Wireshark的使用：
+	https://blog.csdn.net/weixin_44493195/article/details/106339521
+Zenmap的使用：
+	扫描原理：https://www.cnblogs.com/tdcqma/p/5692546.html
+switchHost:没有修改权限
+	1、进入 C:\Windows\System32\drivers\etc
+	右键点击hosts的属性查看 属性的只读是否被勾选了，如果被勾选了将勾选勾去掉
+		上述完成后以管理员身份运行（管理员都是完全控制的）如果还不行请按照下图配置
+	2、右键属性——安全——编辑——找到users 和自己的用户名——勾选权限，成完全控制。。。——点击确定
+	OK 了
+	
+	
+

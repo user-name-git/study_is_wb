@@ -1,0 +1,25 @@
+1.检查是否已经安装过MySQL：rpm -qa | grep mysql
+2.删除命令：rpm -qa | grep mysql
+3.查询所有mysql对应的文件夹：whereis mysql
+4.验证是否删除完毕：find / -name mysql
+5.检查mysql用户组和用户是否存在，如果没有，则创建：
+	cat  /etc/group | grep mysql
+	cat  /etc/passwd | grep mysql
+	groupadd mysql
+	useradd -r -g mysql mysql 
+6.从官网下载：wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz
+7.解压：tar xzvf mysql-5.7.24-linux-glibc2.12-x86_64.tar.gz
+8.移动该文件到/usr/local下，并将文件夹名称修改为mysql
+	如果/usr/local/下已经存在mysql，请将已存在mysql文件修改为其他名称，否则后续步骤可能无法正确进行
+		mv mysql-5.7.24-linux-glibc2.12-x86_64 mysql
+	如果/usr/local/下不存在mysql文件夹，直接执行如下命令，也可达到上述效果。
+		 mv mysql-5.7.24-linux-glibc2.12-x86_64 /usr/local/mysql
+9.在/usr/local/mysql目录下创建data目录：mkdir /usr/local/mysql/data
+10。更改MySQL目录下所有的目录及文件夹所属的用户组和用户，以及权限
+	chown -R mysql:mysql /usr/local/mysql
+	chomd -R 755 /usr/local/mysql
+11.编译安装并初始化mysql，务必记住初始化输出日志末尾的密码（数据库管理员临时密码）
+	cd /usr/local/mysql/bin
+	./mysql --initialize --user=mysql --datadir=/usr/local/mysql/data --basedir=/usr/local/mysql
+
+https://www.jianshu.com/p/276d59cbc529

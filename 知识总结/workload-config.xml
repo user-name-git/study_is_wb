@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<workload name="write" description="sample benchmark for s3">
+		-<workflow>
+			-<workstage name="put 4MB data with 100 workers">
+			-<work name="Put64KBData1" workers="4000" totalOps="6000000" driver="driver">
+					<storage type="s3"config="accesskey=W77TB0ELPMF2E16H9UKB;secretkey=ur1MScMsfprzwAR9bRz9FEIEOqX4gFYCmlb0qFLq;endpoint=http://36.134.81.76/"/> 
+					<operation type="write" ratio="100" config="cprefix=test;oprefix=64k;containers=c(1);objects=s(1,75000);sizes=c(64)KB"/> 
+				</work>
+			</workstage>
+		</workflow>
+	</workload>

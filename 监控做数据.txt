@@ -1,0 +1,112 @@
+
+远程连接win ：Administrator
+	win 挂载云硬盘：点击开始-管理工具，双击计算机管理，点击【磁盘管理】，选择磁盘1，点击联机，初始化磁盘，新建简单卷
+如果远程连接/vnc一直掉，输入： unset TMOUT  保持连接命令
+连接不上外网:etc/resolve.conf    解释：DNS客户机配置文件，用于设置DNS服务器的IP地址及DNS域名
+	nameserver 114.114.114.114  解释：定义DNS服务器的IP地址
+性能：apt-get install bc    解释：它类似基本的计算器, 使用这个计算器可以做基本的数学运算
+            echo "scale=9000; 4*a(1)" | bc -l -q    解释：计算圆周率的来测试cpu性能
+
+乌班图打流：
+	iperf3打流工具：测量一个网络最大带宽的工具。
+	Interval   间隔    Transfer  传输      Bandwidth   带宽、
+	测试要求：50M的带宽，测出来Bandwidth结果不低于50M
+	1.apt-get update  #更新
+          2.apt-get install apache2s
+          3.apt-get vim
+          4.vim /etc/apache2/ports.conf   ,修改端口9088(监听端口)
+          5. vim /etc/apache2/sites-enabled/000-default.conf,修改端口9088（监听端口）
+          6.启动服务：service apache2 restart      
+          7.  安装iperf3： yum install iperf3 -y/apt-get install iperf3
+	8.启动iperf3 ：客户端：iperf3 -c IP地址 -t 1000(次数) -i 1(扫描间隔）-p (1234)端口号 注意：如果服务端没有写-p，那这里就不需要
+	9.服务端：iperf3 -s -p 端口号。（如果这里不写端口号，那么客户端不需要写）.
+云主机宕机
+	1、宕机的读写操作：
+echo 1 > /proc/sys/kernel/sysrq   解释：向sysrq文件中写入1是为了开启SysRq功能
+echo c > /proc/sysrq-trigger    解释：故意让系统崩溃 
+	
+	弹性负载均衡监控：
+创建两个云主机，安全组只有默认两个流出即可--订购弹性负载均衡（选择与要用的云主机同一个vpc）--创建监听器，端口8033--后端服务器组，添加业务主机--弹性负载均衡中点查看实地址，将显示的五个IP地址添加到云主机绑定的安全组--弹性负载均衡绑定公网IP--配置云主机业务。	
+VNC登录
+执行：1.apt-get update
+          2.apt-get install apache2
+          3.apt-get vim
+          4.vim /etc/apache2/ports.conf   ,修改端口9088
+          5. vim /etc/apache2/sites-enabled/000-default.conf,修改端口9088
+          6.启动服务：service apache2 restart      
+          7.设置默认访问页面内容： echo ‘It is NODE01’>/var/www/html/index.html 
+			echo ‘It is NODE02’>/var/www/html/index.html
+          8.授予主页读权限：chmod 644 /var/www/html/index.html
+          9. 验证网页访问：curl 弹性负载公网IP:8033
+
+云主机磁盘监控数据：
+1、先查询硬盘情况
+      lsblk
+2、先格式化
+mkfs.ext4 /dev/（需要挂载的硬盘名）
+3、创建挂载目录
+mkdir /mnt/testb
+4、挂载命令
+mount /dev/（需要挂载的硬盘名） /mnt/testb
+
+单块磁盘写数据的：dd if=/dev/（格式化的磁盘） of=/mnt/（挂载的目录）/test.txt bs=1M count=1024
+对于dd命令的解释：if=输入文件名，标准输入（if=input file）读取文件
+		of=输出文件名，标准输出 (of=output file) 写入文件
+例：将/dev/hdb全盘数据备份到指定路径的image文件  ： dd if=/dev/hdb of=/root/image
+
+
+grafana可视化监控数据库图表工具：
+	下载docker：yum install docker -y
+	下载grafana：docker pull registry.cn-hangzhou.aliyuncs.com/qzcsbj/qzcsbj-influxdb_grafana:v1.0
+		如果出现报错（Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running）
+		解决办法：systemctl daemon-reload
+			sudo service docker restart
+			sudo service docker status 
+	运行grafana：docker run -tid --name qzcsbj-influxdb_grafana -p 4000:3000  -p 9086:8086 --privileged=true 9756039ba6b4 /sbin/init
+
+
+grafana+prometheus监控：
+	普罗米修斯的前置条件：yum install go
+		如果成功：go version
+			go version go1.9.4 linux/amd64
+	下载安装Prometheus（https://prometheus.io/download/）
+	下载：wget https://github.com/prometheus/prometheus/releases/download/v2.3.0/prometheus-2.3.0.linux-amd64.tar.gz
+	解压：tar zxvf prometheus-2.3.0.linux-amd64.tar.gz -C /usr/local/
+	ln -sv /usr/local/prometheus-2.3.0.linux-amd64/ /usr/local/prometheus
+	进入：cd /usr/local/prometheus
+	修改Prometheus配置文件prometheus.yml （替换你要监控的IP地址）：
+- job_name: 'prometheus'
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+    - targets: ['localhost:9090']
+      labels:
+          instance: prometheus
+  - job_name: linux
+    static_configs:
+      - targets: ['192.168.210.100:9100','192.168.210.101:9100']
+        labels:
+          instance: db1
+
+  - job_name: mysql
+    static_configs:
+      - targets: ['192.168.210.101:9104']
+        labels:
+          instance: db1
+	启动Prometheus：nohup ./prometheus --config.file=prometheus.yml &
+	可以通过web访问：http://monitor_host:9090
+	被控端：
+	下载node_exporte：wget https://github.com/prometheus/node_exporter/releases/download/v0.14.0/node_exporter-0.14.0.linux-amd64.tar.gz
+	下载mysqld_exporter：wget https://github.com/prometheus/mysqld_exporter/releases/download/v0.10.0/mysqld_exporter-0.10.0.linux-amd64.tar.gz
+
+监控云主机nmon
+	查看自己的操作系统的信息：uname -a
+	查看linux的发行版本：lsb_release -a
+	下载：wget http://sourceforge.net/projects/nmon/files/nmon16e_mpginc.tar.gz
+	创建一个目录：mkdir nmon
+	解压：tar zxvf nmon*** (*代表通配符) -C mnon(指定目录)
+	运行：./nmon_x86_64_centos7 ////也可以生成文件 ./nmon_x86_64_centos6  -s 10 -c 60  -f -m /root/nmon 会生成 .nmon文件
+
+	

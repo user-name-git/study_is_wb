@@ -1,0 +1,155 @@
+list 列表 ，用【】表示，是一种有序的集合，可以随时添加和删除其中的元素。
+        建立一个空的list
+	L=【】
+        由于python是动态语言，所以在list集合不必要求同一种数据类型。
+        list获取可以依据下标
+	从零号位置开始 L【0】
+        list可以倒叙获取
+	从-1开始 L【-1】，L【-2】
+        添加元素
+	L .append（） append()方法添加的元素，会放在list的尾部
+	L.insert(index，元素）   insert()方法添加的元素，会在指定的位置添加
+        list删除元素
+	list.pop()	pop()方法总会删除最后一个元素，如果想要删除指定的位置，pop(index).
+        list替换元素
+	可以通过赋值的方法直接给元素
+	L=['123','456','789']
+	L【0】=“789”
+	L【-1】=“123”
+	就变成 L=['789','456','123']
+tuple 元组 用（）表示 和list集合很相似，但元组 一旦创建，就不能更改。
+         创建一个空元组
+	L=();
+	L=（1，）创建只有一个元组的时候，要记得加上" ,"号
+          如果想要改变可以在创建的时候在元组里面加上list
+	L=（【】）
+if语句
+          在pthon里面没有{}表示作用域。所以在python中识别全靠缩进。
+	条件语句
+	if  表达式：
+		打印内容
+	：表示代码块的开始
+        if-else语句
+                else：
+        if-elif-else
+	if 表达式：
+	elif 表达式：
+	else：
+for循环
+          for 变量名 in 集合：
+while循环
+          while 表达式：
+	循环出口
+break退出循环
+continue跳过本次循环，进行下次循环
+dict 字典 用花括号表示 以键值对的形式进行存储 
+          建一个空的字典
+	L={}
+          判断key、是否存在，用in操作符
+	if  "key" in L:
+		print L["key"]
+          dict本身提供一个get方法，当key不存在的时候，返回none
+	添加语句用赋值,如果value存在，则会顶替原来的。
+		L["key"]=value
+	
+dict的特点一：查找速度快，无论有10个元素还是10万个，查找速度都一样，而list查找速度会随着内容增多而下降
+	缺点：占用内存大，还会浪费很多内容。而list占用内存小，查找速度慢，。
+           特点二：没有绝对顺序
+	 特点三：作为key的元素必须不可改变。list不能作为key。
+set 保证集合不重复，不能存放同样的元素。且 set是一个无序集合
+            创建一个空的set
+	s=set([])
+            in 判断符判断
+	元素 in  s
+             添加元素
+	s.add()
+             删除元素
+	s.remove()
+函数
+	python中的函数类似于Java中的方法
+	自定义函数 def 函数名 max（）：函数体
+	# 带返回值的函数
+		def returns():
+    			return  99;
+		s=returns();
+		print(s)
+
+	# 带参数的函数
+		def param(x,y,z):
+  		  print("hhh")
+  		  return x*y
+接受用戶輸入
+	a=input()
+接受的一般都是字符形式。把字符a转化为整数 并赋值给 a
+	a=int(a)
+# 导入内置模块
+from types import MethodType
+#python中的类（class） python是一个面向对象的语言 类的作用 抽象事物 包装事物
+#python中类和java中类似 有 继承  多态  包装
+#在python中新建的文件是模块  和java不一样
+#可以在模块中写很多类和函数 class 类名(父类)：类体
+# python中类的命名规则和java中一样 大驼峰命名法
+# java中一个类如果没有指定父类那么默认继承object
+# python一个类必须指定父类 没有父类就是 object
+class Student(object):
+    pass
+# 如果要使用类必须实例化对象 对象名=类名();
+# 同一个类实例多次内存是不养一的
+# stu=Student()
+# print(stu)
+# stu=Student()
+# print(stu)
+# 给对象添加属性  只能在当前对象使用
+stu=Student()
+stu.name="张三"
+stu.age=18
+print(stu.name,stu.age)
+
+stu1=Student()
+# 因为只给stu添加了name属性 所以 stu1不能使用name属性
+# print(stu1.name)
+#给对象绑定方法
+stu=Student()
+# 创建函数  给类绑定的函数  默认的要有一个self参数
+def sayHello(self):
+    print("你好世界")
+
+stu.fn=MethodType(sayHello,stu)
+print(stu.fn)
+# 执行绑定的方法
+stu.fn()
+# 给对象绑定的方法 在其他对象不能使用
+# stu2=Student()
+# stu2.fn()
+# 如果一个函数绑定给类那么所有的该类的对象都可以使用
+Student.fun=MethodType(sayHello,Student)
+stu2=Student()
+stu2.fun()
+stu3=Student()
+stu3.fun()
+# 在python中函数就是一个对象 所有函数可以是一个返回值 函数中也可写函数
+# 调用函数的时候加上括号就是执行
+def lazdy_sum():
+    def sum(x,y):
+        return x+y
+    return sum
+# 调用了lazdy_sum返回了一个sum函数
+s=lazdy_sum();
+print(s(2,3))
+# 创建列表
+array=[1,2,3,4,5,6,7,8,9];
+# map函数 给定一列表和一个函数 列表将按照函数的计算法 计算的结果 将代替原有的元素
+def mi(x):
+    return x-10
+# 使用map函数计算 第一个参数是 函数 第二参数要的是一个可迭代的对象
+res=map(mi,array)
+print(list(res))
+
+def mo(x):
+    return x>5
+res=filter(mo,array)
+print(list(res))
+# 匿名函数 lambda 关键字  函数没有名字 需要一个 x参数
+f= lambda x: x*x
+print(f)
+print(f(2))

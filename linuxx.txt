@@ -1,0 +1,10 @@
+linux是一种树状目录结构：最上层目录是根目录 / 在linux世界中一切皆文件
+	root：存放root用户的相关文件
+	home：普通用户的相关文件
+	bin:存放常用命令的目录：如：vi su
+	sbin：需要一定权限才可以使用的命令
+	etc:存放配置的文件
+	var：存放经常变化的文件，如网络连接的sock文件 、日志
+	usr：安装一个软件的默认目录，相当于windows下的program files
+	
+	

@@ -1,0 +1,23 @@
+Python+selenuim网址：
+	https://python-selenium-zh.readthedocs.io/zh_CN/latest/
+Python java JAVAScipt SQL Git学习网址：
+	https://www.liaoxuefeng.com/wiki/1016959663602400
+浏览器驱动下载网址：
+	https://www.cnblogs.com/givemelove/p/8482361.html
+java的selenium夹包下载官网网址
+	http://www.seleniumhq.org/download/
+	其他网站：
+	http://selenium-release.storage.googleapis.com/index.html
+安装phpstudy教程，搭建wordpress：
+	https://shimo.im/docs/gxvY9TQ6qQPdtRXQ
+termux的使用，与安装工具：
+	https://www.sqlsec.com/2018/05/termux.html#toc-heading-69
+sqlmap：
+	使用 python2 sqlmap.py -u 
+	https://www.jianshu.com/p/65d7522ecc1f
+fidder安装：
+	https://blog.csdn.net/ychgyyn/article/details/82154433
+AI换脸：
+	https://www.jianshu.com/p/c2afe8919a35
+mysql安装：
+	https://www.cnblogs.com/liuzengzhi/p/11704069.html

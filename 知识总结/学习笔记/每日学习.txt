@@ -1,0 +1,67 @@
+ 建库语句：create database  库名
+删库语句：drop database 库名
+数据库定义语句：
+	建表语句：create table 表名
+	删表语句：drop table 表名
+	添加列：aliter table 表名 add 列名
+	修改列：aliter table 表名  change 旧列名 新列名
+数据库操纵语句：
+	增：insert into 表名
+		插入内容：insert into 表明 value 内容
+	删：delete from 表明 where 条件
+	改：update 表明 set 列名 where 条件
+	查：select 字段名 from 表明 where 条件
+		聚合函数：select max(最大)/avg(平均)/min(最小)/sum(总和)
+		排序：select 字段名 from 表名 order by 字段 asc（升序）/desc（降序）
+		分页查询：select 字段 from 表名 limit 从哪个位置查 一次查几条
+
+你了解哪种语言？面向对象的特点？java的特点？
+	java：跨平台，可移植， 面向对象，健壮性，安全性
+	面向对象：封装，继承和多态
+手写冒泡，叛逆闰年
+	int[] a={1,2,4,7,3,9,7,4};
+	for（int i=0；i<a.length;i++）{
+		for(int j=0;j<a.length-1;j++){
+			int q=a[i];
+			if(a[i])>a[j]{
+				a[i]=a[j];
+				a[j]=q;
+			}
+		}
+	}
+	判断闰年：能被4整除，能被400整除，不能被100整除，
+	int year;
+	if(year%4==0&&year%400==0&&year%100!=0){
+		System.out.print("是闰年")
+	}else{
+		System.out.print("不是闰年")
+	}
+
+
+
+接口关联怎么做的。参数化，参数化的几种方式
+	关联：上一个接口的返回值是下一个接口的入参，
+	参数话：任何可以输入的地方都可以参数话：${}
+	方式：通过beasnshell提交到全局变量，json提取器，csv，函数助手，用户参数
+postman断言，参数化？
+	在响应内容里面写代码进行判断
+	设置全局变量,用{{}}来表示
+
+
+
+
+
+常用的元素定位方式
+	id ， class ，相对路径，绝对路径 ，type属性，
+常用的时间等待方式，区别
+	强制等待：Thread。sleep（） 不管元素有没有出现都要等待
+	隐式等待：全局值设置一次，针对所有的元素，如果在规定的时间内提前加载完成，继续向下执行
+	显示等待：WebDriverWait（driver，60）。until（）；针对的是页面上的某个元素，在规定时间提前加载完成，向下执行
+多个窗口是怎么切换的
+	selenium为每个窗口提供了一个句柄 id号
+iframe中元素是如何定位的？
+	切换到iframe里面：dirver.switchTo（）.frame(webElement);
+	切换到之前的页面：driver.switchTo().defaultContent();
+web自动化学习过程中遇到了的问题
+	web驱动，要和浏览器版本号对应
+	testng导入时要刷新一下，才能显示

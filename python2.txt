@@ -1,0 +1,19 @@
+文档：Robot Framework安装及执行自动化脚本....
+链接：http://note.youdao.com/noteshare?id=3bc7fcb54c3d51751fef1cbdbfa9b9ee
+python2没有Scripts文件：
+	cd python2文件下执行：python2 setup.py install
+	cmd命令下：cd Scripts文件下执行：easy_install.exe pip
+	如果成功则输入：pip2 list
+python
+	下载pip文件
+	cmd命令到下载的文件setup.py执行：python setup.py install
+
+pycharm连接数据库
+	找到:View-> Tool Windows->DataBase
+		如果找不到：file->settings->Plugins 输入database；install
+		然后去view->Tool Windows->DB Browser
+	输入数据库地址，用户名，密码。测试连接Test Connection
+		报错：连接失败，出现时区错误
+		解决方法：cmd—>mysql -u root -p 输入密码->登录成功：show variables like "%time_zone%";
+		system_time_zone 为空表示当前mysql时间与系统一致，time_zone为SYSTEM表示当前使用的时区为SYSTEM时区	输入：set global time_zone="+8:00";
+		确定修改成功.
